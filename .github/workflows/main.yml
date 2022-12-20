@@ -26,7 +26,7 @@ jobs:
         uses: ./ # Uses an action in the root directory
         id: oryx-build
         with:
-          app-location: "./"
+          app-location: "."
   Deploy-preview-Vercel:
     runs-on: ubuntu-latest
     name: Deploy to Vercel
@@ -46,7 +46,7 @@ jobs:
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v1.2
         with:
-          publish-dir: './'
+          publish-dir: '.'
           github-token: ${{ secrets.GITHUB_TOKEN }}
           deploy-message: "Deploy from GitHub Actions"
         env:
