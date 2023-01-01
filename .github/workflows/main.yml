@@ -22,6 +22,13 @@ jobs:
          registry: jamstacktest.azurecr.io
          username: ${{ secrets.AZURE_CLIENT_ID }}
          password: ${{ secrets.AZURE_CLIENT_SECRET }}   
+      - name: Cache NPM dependencies
+        uses: actions/cache@v3
+        with:
+         path: ~/.npm
+         key: ${{ runner.OS }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
+         restore-keys: |
+          ${{ runner.OS }}-npm-cache-   
       - name: Oryx build step
         uses: ./ # Uses an action in the root directory
         id: oryx-build
@@ -39,17 +46,17 @@ jobs:
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
       - name: Deploy Project Artifacts to Vercel
         run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}   
-  Deploy-Netlify:
-    runs-on: ubuntu-latest
-    name : Deploy to Netlify
-    steps:
-      - name: Deploy to Netlify
-        uses: nwtgck/actions-netlify@v1.2
-        with:
-          publish-dir: '.'
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          deploy-message: "Deploy from GitHub Actions"
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        timeout-minutes: 1
+  # Deploy-Netlify:
+  #   runs-on: ubuntu-latest
+  #   name : Deploy to Netlify
+  #   steps:
+  #     - name: Deploy to Netlify
+  #       uses: nwtgck/actions-netlify@v1.2
+  #       with:
+  #         publish-dir: '.'
+  #         github-token: ${{ secrets.GITHUB_TOKEN }}
+  #         deploy-message: "Deploy from GitHub Actions"
+  #       env:
+  #         NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+  #         NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+  #       timeout-minutes: 1
