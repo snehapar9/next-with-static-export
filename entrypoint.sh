@@ -1,6 +1,6 @@
 #!/bin/sh -l
 echo "Starting Oryx build"
 ls -l ~/.npm
-pwd
+npm config list
 oryx build 
 echo "Finishing Oryx build"
