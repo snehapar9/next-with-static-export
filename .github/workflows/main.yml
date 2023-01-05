@@ -25,8 +25,11 @@ jobs:
       - name: Cache NPM dependencies
         uses: actions/cache@v3
         with:
-         path: .npm
+         path: |
+           .npm
+           node_modules
          key: ${{ runner.OS }}-npm2-cache-${{ hashFiles('**/package-lock.json') }}
+         key: 
          restore-keys: |
           ${{ runner.OS }}-npm2-cache-   
       # - name: npm install, build, and test example
