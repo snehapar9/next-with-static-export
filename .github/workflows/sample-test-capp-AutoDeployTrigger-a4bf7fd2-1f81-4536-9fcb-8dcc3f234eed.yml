@@ -1,0 +1,42 @@
+name: Trigger auto deployment for sample-test-capp
+
+# When this action will be executed
+on:
+  # Automatically trigger it when detected changes in repo
+  push:
+    branches: 
+      [ main ]
+    paths:
+    - '**'
+    - '.github/workflows/sample-test-capp-AutoDeployTrigger-a4bf7fd2-1f81-4536-9fcb-8dcc3f234eed.yml'
+
+  # Allow mannually trigger 
+  workflow_dispatch:
+      
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout to the branch
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.SAMPLETESTCAPP_AZURE_CREDENTIALS }}
+
+      - name: Build and push container image to registry
+        uses: azure/container-apps-deploy-action@v1
+        with:
+          appSourcePath: ${{ github.workspace }} 
+          registryUrl: snehaparacr.azurecr.io
+          registryUsername: ${{ secrets.SAMPLETESTCAPP_REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.SAMPLETESTCAPP_REGISTRY_PASSWORD }}
+          containerAppName: sample-test-capp
+          resourceGroup: ca-snehapar-group
+          imageToBuild: snehaparacr.azurecr.io/mcr.microsoft.com/k8se/quickstart:${{ github.sha }}
+          
+
+     
+
